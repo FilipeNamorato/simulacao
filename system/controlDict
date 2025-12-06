@@ -38,8 +38,6 @@ maxDeltaT       0.01;
 libs            ("libsixDoFRigidBodyMotion.so");
 
 functions
-    {
-        #include "forces"
-    }
-    
-    
+{
+    #include "forces"
+}

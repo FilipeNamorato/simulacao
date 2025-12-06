@@ -18,24 +18,14 @@ forces
 {
     type            forces;
     libs            ("libforces.so");
-
+    patches         (helice);
+    rho             rhoInf;
+    rhoInf          1.225;
+    CofR            (0 0 0);
+    log             yes;
     writeControl    timeStep;
     writeInterval   1;
-
-    log             yes;
-
-    // Onde calcular as forças? Na sua hélice!
-    patches         (helice); 
-
-    // A CORREÇÃO DO ERRO ESTÁ AQUI:
-    rho             rhoInf;     // Diz ao solver: "Use a densidade de referência"
-    rhoInf          1.225;      // Valor da densidade (kg/m3)
-
-    // Centro de rotação (para cálculo de momento/torque)
-    CofR            (0 0 0);
-
-    // Eixo de rotação (Pitch axis)
-    pitchAxis       (0 1 0);
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
