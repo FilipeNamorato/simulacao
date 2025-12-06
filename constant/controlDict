@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleDyMFoam; // Solver para malha dinâmica
+
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         12;
+
+// DeltaT inicial bem pequeno para o "arranque"
+deltaT          1e-5;
+
+writeControl    adjustableRunTime;
+writeInterval   0.05; // Grava a cada 0.05s de simulação
+
+purgeWrite      0;
+writeFormat     binary;
+writePrecision  6;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable true;
+
+// --- CONTROLE DE ESTABILIDADE ---
+adjustTimeStep  yes;
+maxCo           1.0;  // 6DoF precisa de Courant baixo (< 1.0)
+maxDeltaT       0.01; // Trava o passo máximo para não perder detalhes da rotação
+
+// Bibliotecas necessárias
+libs            ("libsixDoFRigidBodyMotion.so" "libutilityFunctionObjects.so");
+
+functions
+{
+    #includeFunc Q
+    #include "surfaces"
+    #include "forces"
+}
+
+// ************************************************************************* //

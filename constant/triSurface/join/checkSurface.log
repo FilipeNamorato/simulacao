@@ -1,0 +1,78 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 9-b456138dc4bc
+Exec   : surfaceCheck outerCylinder.stl
+Date   : Jul 03 2025
+Time   : 22:22:04
+Host   : "ALLAN-DESKTOP"
+PID    : 5967
+I/O    : uncollated
+Case   : /home/allanhenriquest/Documentos/CasosOpenFoam/6DOF/fourblades/v1fourblades/constant/triSurface/join
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Reading surface from "outerCylinder.stl" ...
+
+Statistics:
+Triangles    : 2386
+Vertices     : 1195
+Bounding Box : (-0.999695 -0.6 -0.999883) (1 0.6 0.999942)
+
+Region	Size
+------	----
+inlet	574
+outlet	469
+walls	1343
+
+
+Surface has no illegal triangles.
+
+Triangle quality (equilateral=1, collapsed=0):
+    0 .. 0.05  : 0
+    0.05 .. 0.1  : 0
+    0.1 .. 0.15  : 0
+    0.15 .. 0.2  : 0
+    0.2 .. 0.25  : 0
+    0.25 .. 0.3  : 0
+    0.3 .. 0.35  : 0
+    0.35 .. 0.4  : 0.00125733
+    0.4 .. 0.45  : 0.00293378
+    0.45 .. 0.5  : 0.00922045
+    0.5 .. 0.55  : 0.00922045
+    0.55 .. 0.6  : 0.00963956
+    0.6 .. 0.65  : 0.00544845
+    0.65 .. 0.7  : 0.00419111
+    0.7 .. 0.75  : 0.00586756
+    0.75 .. 0.8  : 0.0134116
+    0.8 .. 0.85  : 0.0209556
+    0.85 .. 0.9  : 0.0561609
+    0.9 .. 0.95  : 0.456412
+    0.95 .. 1  : 0.405281
+
+    min 0.363347 for triangle 1523
+    max 0.999985 for triangle 274
+
+Edges:
+    min 0.0267086 for edge 2115 points (1 0.351718 -2.17365e-16)(1 0.32501 -2.14399e-16)
+    max 0.205691 for edge 951 points (-0.966932 0.6 0.255034)(-0.880052 0.6 0.0685917)
+
+Checking for points less than 1e-6 of bounding box ((1.99969 1.2 1.99983) metre) apart.
+Found 0 nearby points.
+
+Surface is closed. All edges connected to two faces.
+
+Number of unconnected parts : 1
+
+Number of zones (connected area with consistent normal) : 1
+
+
+End
+

@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh       dynamicMotionSolverFvMesh;
+
+motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
+
+motionSolver        sixDoFRigidBodyMotion;
+
+patches             ("helice");
+
+rhoInf              1.225; // Isso continua certo e necessário!
+
+innerDistance       0.05;
+outerDistance       0.1;
+
+// --- DADOS DA HÉLICE ---
+mass                0.063103;
+centreOfMass        (0 0 0);
+momentOfInertia     (0.0002823 0.0005562 0.0002823);
+
+// --- TRAVAS (CONSTRAINTS) ---
+constraints
+{
+    fixedPoint
+    {
+        // AQUI TEM QUE SER CONSTRAINT (Com C)
+        sixDoFRigidBodyMotionConstraint point;
+        centreOfMass    (0 0 0);
+    }
+
+    fixedAxis
+    {
+        // AQUI TEM QUE SER CONSTRAINT (Com C)
+        sixDoFRigidBodyMotionConstraint axis;
+        axis            (0 1 0);
+    }
+}
+
+// --- AMORTECIMENTO (RESTRAINTS) ---
+restraints
+{
+    motorFriction
+    {
+        // AQUI TEM QUE SER RESTRAINT (Com R) !!!
+        // O erro estava aqui: ele pedia Restraint e nós não estávamos dando.
+        sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
+        coeff           0.0005;
+    }
+}
+
+solver
+{
+    type Newmark;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

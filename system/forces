@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      forces;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+forces
+{
+    type            forces;
+    libs            ("libforces.so");
+
+    writeControl    timeStep;
+    writeInterval   1;
+
+    log             yes;
+
+    // Onde calcular as forças? Na sua hélice!
+    patches         (helice); 
+
+    // A CORREÇÃO DO ERRO ESTÁ AQUI:
+    rho             rhoInf;     // Diz ao solver: "Use a densidade de referência"
+    rhoInf          1.225;      // Valor da densidade (kg/m3)
+
+    // Centro de rotação (para cálculo de momento/torque)
+    CofR            (0 0 0);
+
+    // Eixo de rotação (Pitch axis)
+    pitchAxis       (0 1 0);
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

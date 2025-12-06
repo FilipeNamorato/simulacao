@@ -1,0 +1,88 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    // --- SOLVER DE MALHA (CRÍTICO PARA 6DoF) ---
+    cellDisplacement
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
+    }
+
+    p
+    {
+        solver          PBiCGStab;
+        smoother        DICGaussSeidel;
+        cacheAgglomeration no;
+        maxIter         100;
+        preconditioner  DIC;
+        tolerance       1e-6;
+        relTol          0.01;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    "pcorr.*"
+    {
+        $p;
+        relTol          0.1;
+    }
+
+    "(U|k|epsilon)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
+
+    "(U|k|epsilon)Final"
+    {
+        $U;
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    correctPhi          yes;
+    nOuterCorrectors    3; // Mantém alto para garantir acoplamento fluido-estrutura
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 2;
+    
+    moveMeshOuterCorrectors yes; // Recalcula a malha a cada iteração externa
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"   0.3; // Relaxamento para segurar a estabilidade
+    }
+}
+
+cache
+{
+    grad(U);
+}
+
+// ************************************************************************* //
