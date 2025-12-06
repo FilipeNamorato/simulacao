@@ -1,10 +1,11 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox          |
+|  \\    /   O peration     | Version:  v2412                                |
+|   \\  /    A nd           | Website:  www.openfoam.com                     |
+|    \\/     M anipulation  |                                                |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -23,7 +24,7 @@ motionSolver        sixDoFRigidBodyMotion;
 
 patches             ("helice");
 
-rhoInf              1.225; // Isso continua certo e necessário!
+rhoInf              1.225;
 
 innerDistance       0.05;
 outerDistance       0.1;
@@ -38,14 +39,12 @@ constraints
 {
     fixedPoint
     {
-        // AQUI TEM QUE SER CONSTRAINT (Com C)
         sixDoFRigidBodyMotionConstraint point;
         centreOfMass    (0 0 0);
     }
 
     fixedAxis
     {
-        // AQUI TEM QUE SER CONSTRAINT (Com C)
         sixDoFRigidBodyMotionConstraint axis;
         axis            (0 1 0);
     }
@@ -56,8 +55,6 @@ restraints
 {
     motorFriction
     {
-        // AQUI TEM QUE SER RESTRAINT (Com R) !!!
-        // O erro estava aqui: ele pedia Restraint e nós não estávamos dando.
         sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
         coeff           0.0005;
     }
@@ -67,5 +64,3 @@ solver
 {
     type Newmark;
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -3,8 +3,9 @@
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2412                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
+|    \\/     M anipulation  |                                                |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -12,20 +13,22 @@ FoamFile
     class       dictionary;
     object      forces;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 forces
 {
     type            forces;
     libs            ("libforces.so");
+
     patches         (helice);
+
     rho             rhoInf;
     rhoInf          1.225;
+
     CofR            (0 0 0);
-    log             yes;
+
     writeControl    timeStep;
     writeInterval   1;
+    log             yes;
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
