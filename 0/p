@@ -37,6 +37,17 @@ boundaryField
     {
         type            zeroGradient;
     }
+
+    AMI1
+    {
+        type            cyclicAMI;
+    }
+
+    AMI2
+    {
+        type            cyclicAMI;
+    }
+
 }
 
 

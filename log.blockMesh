@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2412                                  |
+|  \\    /   O peration     | Version:  2112                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-Build  : _f00230df-20250528 OPENFOAM=2412 patch=250528 version=2412
+Build  : _6e1fca0e-20220610 OPENFOAM=2112 patch=220610 version=2112
 Arch   : "LSB;label=32;scalar=64"
 Exec   : blockMesh
-Date   : Dec 05 2025
-Time   : 21:26:43
-Host   : filipe
-PID    : 54098
+Date   : Dec 08 2025
+Time   : 08:30:54
+Host   : eol-VirtualBox
+PID    : 4747
 I/O    : uncollated
-Case   : /home/filipe/simulacaoEolica/simulacao
+Case   : /home/eol/simulacao
 nProcs : 1
 trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
 fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
@@ -42,6 +42,7 @@ Check topology
 
 Creating block offsets
 Creating merge list (topological search)...
+Deleting polyMesh directory "constant/polyMesh"
 
 Creating polyMesh from blockMesh
 Creating patches
@@ -52,7 +53,8 @@ Creating points with scale (1 1 1)
         j : 0.055 .. 0.055
         k : 0.0833333 .. 0.0833333
 
-No patch pairs to merge
+
+There are no merge patch pairs
 
 Writing polyMesh with 0 cellZones
 ----------------

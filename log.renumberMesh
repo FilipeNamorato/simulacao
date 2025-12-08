@@ -1,0 +1,61 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2112                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _6e1fca0e-20220610 OPENFOAM=2112 patch=220610 version=2112
+Arch   : "LSB;label=32;scalar=64"
+Exec   : renumberMesh -overwrite -parallel
+Date   : Dec 08 2025
+Time   : 09:21:44
+Host   : eol-VirtualBox
+PID    : 7904
+I/O    : uncollated
+Case   : /home/eol/simulacao
+nProcs : 6
+Hosts  :
+(
+    (eol-VirtualBox 6)
+)
+Pstream initialized with:
+    floatTransfer      : 0
+    nProcsSimpleSum    : 0
+    commsType          : nonBlocking
+    polling iterations : 0
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Mesh region0 size: 142708
+Before renumbering :
+    band           : 23942
+    profile        : 3.59327e+08
+
+Using default renumberMethod.
+
+Selecting renumberMethod CuthillMcKee
+
+Reading volScalarField: epsilon k nut p
+Reading volVectorField: U
+Reading pointVectorField: pointDisplacement
+Reading cellSet: concaveCells
+Reading faceSet: concaveFaces lowQualityTetFaces skewFaces warpedFaces
+
+Renumbering processor cell decomposition map cellProcAddressing
+Renumbering processor face decomposition map faceProcAddressing
+Renumbering processor point decomposition map pointProcAddressing
+After renumbering :
+    band           : 1494
+    profile        : 1.19508e+08
+
+Writing mesh to "constant"
+End
+
+Finalising parallel run

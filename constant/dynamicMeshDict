@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox          |
-|  \\    /   O peration     | Version:  v2412                                |
+|  \\    /   O peration     | Version:  v2112                                |
 |   \\  /    A nd           | Website:  www.openfoam.com                     |
 |    \\/     M anipulation  |                                                |
 \*---------------------------------------------------------------------------*/
@@ -24,6 +24,9 @@ motionSolver        sixDoFRigidBodyMotion;
 
 patches             ("helice");
 
+// --- AQUI ESTAVA O PROBLEMA ---
+// Você precisa dizer explicitamente que a densidade (rho) é o rhoInf
+rho                 rhoInf;  // <--- LINHA NOVA OBRIGATÓRIA
 rhoInf              1.225;
 
 innerDistance       0.05;

@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  v2112                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -35,9 +35,39 @@ adjustTimeStep  yes;
 maxCo           1.0;
 maxDeltaT       0.01;
 
-libs            ("libsixDoFRigidBodyMotion.so");
+// Carregando as bibliotecas (Importante!)
+libs            ("libsixDoFRigidBodyMotion.so" "libforces.so");
 
 functions
 {
-    #include "forces"
+    // USANDO forceCoeffs EM VEZ DE forces
+    // Isso evita o erro de "Dynamic Pressure" e "Could not find rho"
+    
+    monitoramento
+    {
+        type            forceCoeffs;
+        libs            ("libforces.so");
+        
+        patches         (helice); 
+
+        // Configuração Mágica que resolve o problema
+        rho             rhoInf;
+        rhoInf          1.225;
+
+        // Dados geométricos (Não afetam se a simulação roda, só os valores de Cd/Cl)
+        // Ajuste conforme sua geometria se precisar de precisão nos coeficientes
+        CofR            (0 0 0);  // Centro de rotação
+        liftDir         (0 1 0);  
+        dragDir         (1 0 0);  
+        pitchAxis       (0 0 1);
+        magUInf         10;       // Velocidade de referência
+        lRef            1;        
+        Aref            1;        
+
+        writeControl    timeStep;
+        writeInterval   1;
+        log             yes;
+    }
 }
+
+// ************************************************************************* //

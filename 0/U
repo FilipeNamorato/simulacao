@@ -46,6 +46,17 @@ boundaryField
         type            movingWallVelocity;
         value           uniform (0 0 0);
     }
+
+    AMI1
+    {
+        type            cyclicAMI;
+    }
+
+    AMI2
+    {
+        type            cyclicAMI;
+    }
+
 }
 
 

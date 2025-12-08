@@ -3,7 +3,7 @@
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2412                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
 FoamFile
@@ -16,19 +16,21 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-forces
-{
-    type            forces;
-    libs            ("libforces.so");
+// REMOVI O "forces {" AQUI
 
-    patches         (helice);
+type            forces;
+libs            ("libforces.so");
 
-    rho             rhoInf;
-    rhoInf          1.225;
+patches         (helice);
 
-    CofR            (0 0 0);
+// Configuração para incompressível (usando valor de referência)
+rho             rhoInf;
+rhoInf          1.225;
 
-    writeControl    timeStep;
-    writeInterval   1;
-    log             yes;
-}
+CofR            (0 0 0);
+
+writeControl    timeStep;
+writeInterval   1;
+log             yes;
+
+// REMOVI O "}" DO FINAL

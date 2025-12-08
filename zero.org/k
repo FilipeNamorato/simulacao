@@ -41,6 +41,17 @@ boundaryField
         type            kqRWallFunction;
         value           $internalField;
     }
+
+    AMI1
+    {
+        type            cyclicAMI;
+    }
+
+    AMI2
+    {
+        type            cyclicAMI;
+    }
+
 }
 
 
