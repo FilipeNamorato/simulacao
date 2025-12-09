@@ -29,10 +29,16 @@ gradSchemes
 divSchemes
 {
     default         none;
-    //div(phi,U)      Gauss upwind;
-    div(phi,U)      Gauss linearUpwind grad(U);
+    
+    // Velocidade pode continuar precisa
+    div(phi,U)      Gauss linearUpwind grad(U); 
+
+    // --- TURBULÊNCIA: USE UPWIND PARA NÃO EXPLODIR ---
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;
+    div(phi,omega)  Gauss upwind;
+    
+    // Outros termos
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 

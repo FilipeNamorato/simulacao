@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2112                                 |
+|  \\    /   O peration     | Version:  v2412                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -16,33 +16,39 @@ FoamFile
 
 application     pimpleFoam;
 
-startFrom       startTime;
+startFrom       latestTime;
 startTime       0;
 stopAt          endTime;
 endTime         12;
-deltaT          0.00001;
+
+// DeltaT inicial bem pequeno para o primeiro passo
+deltaT          0.000005;
+
 writeControl    adjustableRunTime;
-writeInterval   0.05;
+writeInterval   0.01; // Salvando frequente no início para monitorar
 purgeWrite      0;
 writeFormat     binary;
 writePrecision  6;
 writeCompression off;
 timeFormat      general;
 timePrecision   6;
-runTimeModifiable false;
 
-adjustTimeStep  yes;
-maxCo           1.0;
-maxDeltaT       0.01;
+// --- IMPORTANTE: Deixe 'true' para podermos acelerar depois sem parar a simulação ---
+runTimeModifiable true;
 
-// Carregando as bibliotecas (Importante!)
+// --- CONTROLE DE PASSO DE TEMPO (MODO SEGURANÇA) ---
+adjustTimeStep  no;
+
+// Travas agressivas para passar da fase de aceleração (0.0s a 0.1s)
+maxCo           0.8;     // Bem conservador
+maxAlphaCo      0.5;
+maxDeltaT       0.0001;  // Teto baixo para evitar pulos grandes
+
+// Carregando as bibliotecas
 libs            ("libsixDoFRigidBodyMotion.so" "libforces.so");
 
 functions
 {
-    // USANDO forceCoeffs EM VEZ DE forces
-    // Isso evita o erro de "Dynamic Pressure" e "Could not find rho"
-    
     monitoramento
     {
         type            forceCoeffs;
@@ -50,17 +56,15 @@ functions
         
         patches         (helice); 
 
-        // Configuração Mágica que resolve o problema
         rho             rhoInf;
         rhoInf          1.225;
 
-        // Dados geométricos (Não afetam se a simulação roda, só os valores de Cd/Cl)
-        // Ajuste conforme sua geometria se precisar de precisão nos coeficientes
-        CofR            (0 0 0);  // Centro de rotação
+        // Dados geométricos
+        CofR            (0 0 0);
         liftDir         (0 1 0);  
         dragDir         (1 0 0);  
         pitchAxis       (0 0 1);
-        magUInf         10;       // Velocidade de referência
+        magUInf         10;
         lRef            1;        
         Aref            1;        
 

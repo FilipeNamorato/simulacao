@@ -4,34 +4,33 @@ set -e
 # --- CONFIGURAÇÕES RYZEN 5 5600G ---
 NP=6
 MPI_EXEC="/usr/bin/mpirun"
-SOLVER="pimpleFoam"  # <--- CORRIGIDO: v2412 usa pimpleFoam para tudo
+SOLVER="pimpleFoam"
 
 echo "-----------------------------------"
-echo "🚀 Iniciando Simulação 6DoF (pimpleFoam)"
+echo "🔄 RETOMANDO Simulação 6DoF"
 echo "-----------------------------------"
 
-echo "🧹 Restaurando condições iniciais..."
-if [ -d "0.orig" ]; then
-    rm -rf 0
-    cp -r 0.orig 0
-elif [ -d "zero.org" ]; then
-    rm -rf 0
-    cp -r zero.org 0
-else
-    echo "⚠️  Usando pasta 0 existente."
-fi
+# --- BLOCO DE DESTRUIÇÃO DESATIVADO ---
+# (Não queremos limpar a pasta 0 nem decompor de novo)
+# echo "🧹 Restaurando condições iniciais..."
+# rm -rf 0 ...
+# echo "🔢 Decompondo..."
+# decomposePar ...
+# echo "🔁 Renumerando..."
+# renumberMesh ...
+# --------------------------------------
 
-echo "🔢 Decompondo..."
-decomposePar -force > log.decomposePar
+echo "⚠️  Checagem rápida:"
+echo "   1. As pastas 'processor0' a 'processor5' estão aí?"
+echo "   2. O controlDict está com 'startFrom latestTime;' ?"
+echo "-----------------------------------"
 
-echo "🔁 Renumerando..."
-$MPI_EXEC -np $NP renumberMesh -overwrite -parallel > log.renumberMesh
+echo "🔥 Rodando Simulação (Continuando)..."
 
-echo "🔥 Rodando Simulação..."
-# Roda o solver
-$MPI_EXEC -np $NP $SOLVER -parallel > log.simulation
+# Roda o solver em paralelo. 
+# Ele vai procurar automaticamente o último tempo dentro das pastas processor*
+# Estou salvando num log novo para você não perder o histórico do erro antigo
+$MPI_EXEC -np $NP $SOLVER -parallel > log.simulation_continue
 
-echo "📦 Reconstruindo..."
-reconstructPar > log.reconstructPar
-
-echo "✅ Fim."
+echo "✅ Fim da execução."
+echo "   Verifique o arquivo 'log.simulation_continue' para acompanhar."

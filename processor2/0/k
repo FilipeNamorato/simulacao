@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -30,13 +30,13 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 0.07;
+        value           nonuniform List<scalar> 0;
     }
     outlet
     {
         type            inletOutlet;
-        inletValue      nonuniform List<scalar> 0;
-        value           nonuniform List<scalar> 0;
+        inletValue      uniform 0.07;
+        value           uniform 0.07;
     }
     helice
     {

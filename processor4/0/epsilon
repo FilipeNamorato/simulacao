@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -24,10 +24,8 @@ boundaryField
 {
     walls
     {
-        lowReCorrection 0;
-        blending        stepwise;
-        n               2;
         type            epsilonWallFunction;
+        blending        stepwise;
         value           nonuniform List<scalar> 0;
     }
     inlet
@@ -43,10 +41,8 @@ boundaryField
     }
     helice
     {
-        lowReCorrection 0;
-        blending        stepwise;
-        n               2;
         type            epsilonWallFunction;
+        blending        stepwise;
         value           uniform 0.09879;
     }
     AMI1

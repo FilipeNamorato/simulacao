@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -26,9 +26,6 @@ boundaryField
     {
         type            nutkWallFunction;
         blending        stepwise;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
         value           nonuniform List<scalar> 0;
     }
     inlet
@@ -45,9 +42,6 @@ boundaryField
     {
         type            nutkWallFunction;
         blending        stepwise;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
         value           uniform 0;
     }
     AMI1

@@ -15,7 +15,7 @@ FoamFile
 
 solvers
 {
-    // --- SOLVER DE MALHA (CRÍTICO PARA 6DoF) ---
+    // --- SOLVER DE MALHA (Essencial para 6DoF) ---
     cellDisplacement
     {
         solver          PCG;
@@ -24,62 +24,52 @@ solvers
         relTol          0;
     }
 
-    p
+    // --- PRESSÃO (A mudança chave: PCG é "blindado") ---
+    "p|pFinal|pcorr.*"
     {
-        solver          PBiCGStab;
-        smoother        DICGaussSeidel;
-        cacheAgglomeration no;
-        maxIter         100;
+        solver          PCG;
         preconditioner  DIC;
         tolerance       1e-6;
         relTol          0.01;
     }
 
-    pFinal
-    {
-        $p;
-        relTol          0;
-    }
-
-    "pcorr.*"
-    {
-        $p;
-        relTol          0.1;
-    }
-
-    "(U|k|epsilon)"
+    // --- VELOCIDADE E TURBULÊNCIA ---
+    "(U|k|epsilon|omega).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-6;
         relTol          0.1;
     }
-
-    "(U|k|epsilon)Final"
-    {
-        $U;
-        relTol          0;
-    }
 }
 
+// --- CONTROLE PIMPLE (Só uma vez!) ---
 PIMPLE
 {
     correctPhi          yes;
-    nOuterCorrectors    3; // Mantém alto para garantir acoplamento fluido-estrutura
-    nCorrectors         2;
-    nNonOrthogonalCorrectors 2;
     
-    moveMeshOuterCorrectors yes; // Recalcula a malha a cada iteração externa
+    // Configuracao robusta:
+    nOuterCorrectors    5;  // Mantém 5 para garantir que convirja a cada passo
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 1;
+    
+    moveMeshOuterCorrectors yes; // Recalcula o movimento várias vezes (vital!)
 }
 
+// --- RELAXAMENTO (Freio de mão) ---
 relaxationFactors
 {
+    fields
+    {
+        p               0.3;
+    }
     equations
     {
-        ".*"   0.3; // Relaxamento para segurar a estabilidade
+        ".*"            0.3; // Segura tudo, inclusive k e epsilon
     }
 }
 
+// --- Otimização de memória ---
 cache
 {
     grad(U);

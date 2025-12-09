@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox          |
-|  \\    /   O peration     | Version:  v2112                                |
-|   \\  /    A nd           | Website:  www.openfoam.com                     |
-|    \\/     M anipulation  |                                                |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
 FoamFile
@@ -24,18 +24,20 @@ motionSolver        sixDoFRigidBodyMotion;
 
 patches             ("helice");
 
-// --- AQUI ESTAVA O PROBLEMA ---
-// Você precisa dizer explicitamente que a densidade (rho) é o rhoInf
-rho                 rhoInf;  // <--- LINHA NOVA OBRIGATÓRIA
+// Definição da densidade para o 6DoF
+rho                 rhoInf;
 rhoInf              1.225;
 
 innerDistance       0.05;
 outerDistance       0.1;
 
-// --- DADOS DA HÉLICE ---
+// --- DADOS DA HÉLICE (MODIFICADOS PARA ESTABILIDADE) ---
 mass                0.063103;
 centreOfMass        (0 0 0);
-momentOfInertia     (0.0002823 0.0005562 0.0002823);
+
+// Inércia AUMENTADA em 100x para suavizar a aceleração inicial
+// Valores originais: (0.0002823 0.0005562 0.0002823)
+momentOfInertia     (0.02823 0.05562 0.02823);
 
 // --- TRAVAS (CONSTRAINTS) ---
 constraints
@@ -59,7 +61,9 @@ restraints
     motorFriction
     {
         sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
-        coeff           0.0005;
+        // Amortecimento AUMENTADO em 100x para simular carga
+        // Valor original: 0.0005
+        coeff           0.05;
     }
 }
 
