@@ -94,7 +94,7 @@ castellatedMeshControls
         
  cylinder
         {
-            level       (1 1);
+            level       (2 2);
             cellZone    cylinder;
             faceZone    cylinder;
             mode        inside;

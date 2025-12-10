@@ -1,11 +1,10 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2112                                 |
+|  \\    /   O peration     | Version:  v2012                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
     version     2.0;
@@ -16,58 +15,22 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh       dynamicMotionSolverFvMesh;
+// Define que o movimento é PRESCRITO (Solid Body)
+dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
+motionSolverLibs ( "libfvMotionSolvers.so" );
 
-motionSolver        sixDoFRigidBodyMotion;
+solver          solidBody;
 
-patches             ("helice");
-
-// Definição da densidade para o 6DoF
-rho                 rhoInf;
-rhoInf              1.225;
-
-innerDistance       0.05;
-outerDistance       0.1;
-
-// --- DADOS DA HÉLICE (MODIFICADOS PARA ESTABILIDADE) ---
-mass                0.063103;
-centreOfMass        (0 0 0);
-
-// Inércia AUMENTADA em 100x para suavizar a aceleração inicial
-// Valores originais: (0.0002823 0.0005562 0.0002823)
-momentOfInertia     (0.02823 0.05562 0.02823);
-
-// --- TRAVAS (CONSTRAINTS) ---
-constraints
+solidBodyCoeffs
 {
-    fixedPoint
-    {
-        sixDoFRigidBodyMotionConstraint point;
-        centreOfMass    (0 0 0);
-    }
+    cellZone        cylinder;   // <--- MUDANÇA AQUI (o nome que está na sua malha)
 
-    fixedAxis
+    solidBodyMotionFunction  rotatingMotion;
+    rotatingMotionCoeffs
     {
-        sixDoFRigidBodyMotionConstraint axis;
-        axis            (0 1 0);
+        origin      (0 0 0);
+        axis        (0 1 0);
+        omega       25.52;      // Rad/s (baseado na tabela do seu PDF para 4 pás)
     }
-}
-
-// --- AMORTECIMENTO (RESTRAINTS) ---
-restraints
-{
-    motorFriction
-    {
-        sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
-        // Amortecimento AUMENTADO em 100x para simular carga
-        // Valor original: 0.0005
-        coeff           0.05;
-    }
-}
-
-solver
-{
-    type Newmark;
 }

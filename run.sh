@@ -7,30 +7,23 @@ MPI_EXEC="/usr/bin/mpirun"
 SOLVER="pimpleFoam"
 
 echo "-----------------------------------"
-echo "🔄 RETOMANDO Simulação 6DoF"
+echo "🚀 INICIANDO NOVA SIMULAÇÃO (Solid Body Motion)"
 echo "-----------------------------------"
 
-# --- BLOCO DE DESTRUIÇÃO DESATIVADO ---
-# (Não queremos limpar a pasta 0 nem decompor de novo)
-# echo "🧹 Restaurando condições iniciais..."
-# rm -rf 0 ...
-# echo "🔢 Decompondo..."
-# decomposePar ...
-# echo "🔁 Renumerando..."
-# renumberMesh ...
-# --------------------------------------
+# 1. LIMPEZA (CRÍTICO PARA MUDANÇA DE FÍSICA)
+echo "🧹 Limpando arquivos antigos e processadores..."
+# Apaga pastas de tempo (0.1, 0.2...) mas mantém a pasta 0 original
+ls -d [1-9]* 0.* processor* | xargs rm -rf 2>/dev/null || true
+echo "   -> Pasta limpa."
 
-echo "⚠️  Checagem rápida:"
-echo "   1. As pastas 'processor0' a 'processor5' estão aí?"
-echo "   2. O controlDict está com 'startFrom latestTime;' ?"
-echo "-----------------------------------"
+# 2. DECOMPOSIÇÃO
+echo "🔢 Decompondo o domínio para $NP núcleos..."
+decomposePar > log.decompose
+echo "   -> Decomposição concluída."
 
-echo "🔥 Rodando Simulação (Continuando)..."
-
-# Roda o solver em paralelo. 
-# Ele vai procurar automaticamente o último tempo dentro das pastas processor*
-# Estou salvando num log novo para você não perder o histórico do erro antigo
-$MPI_EXEC -np $NP $SOLVER -parallel > log.simulation_continue
+# 3. EXECUÇÃO
+echo "🔥 Rodando Solver ($SOLVER) em paralelo..."
+$MPI_EXEC -np $NP $SOLVER -parallel > log.simulation_solidBody
 
 echo "✅ Fim da execução."
-echo "   Verifique o arquivo 'log.simulation_continue' para acompanhar."
+echo "   Acompanhe com: tail -f log.simulation_solidBody"

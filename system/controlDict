@@ -1,12 +1,13 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  v2012                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
+    version     2.0;
     format      ascii;
     class       dictionary;
     location    "system";
@@ -16,16 +17,16 @@ FoamFile
 
 application     pimpleFoam;
 
-startFrom       latestTime;
+startFrom       startTime; // Começando do zero para garantir a rampa correta
 startTime       0;
 stopAt          endTime;
-endTime         12;
+endTime         12;        // Tempo total citado no documento
 
-// DeltaT inicial bem pequeno para o primeiro passo
-deltaT          0.000005;
+// Passo de tempo inicial (pequeno para o arranque)
+deltaT          0.00001;
 
 writeControl    adjustableRunTime;
-writeInterval   0.01; // Salvando frequente no início para monitorar
+writeInterval   0.1;       // Salvando a cada 0.1s para não encher o disco
 purgeWrite      0;
 writeFormat     binary;
 writePrecision  6;
@@ -33,40 +34,41 @@ writeCompression off;
 timeFormat      general;
 timePrecision   6;
 
-// --- IMPORTANTE: Deixe 'true' para podermos acelerar depois sem parar a simulação ---
 runTimeModifiable true;
 
-// --- CONTROLE DE PASSO DE TEMPO (MODO SEGURANÇA) ---
-adjustTimeStep  no;
+// --- CONTROLE DE PASSO DE TEMPO ---
+// Como é movimento prescrito (mais estável), podemos deixar automático
+adjustTimeStep  yes;
+maxCo           2.0;       // PIMPLE aguenta Courant alto
+maxAlphaCo      2.0;
+maxDeltaT       0.01;      // Teto para não perder resolução física
 
-// Travas agressivas para passar da fase de aceleração (0.0s a 0.1s)
-maxCo           0.8;     // Bem conservador
-maxAlphaCo      0.5;
-maxDeltaT       0.0001;  // Teto baixo para evitar pulos grandes
-
-// Carregando as bibliotecas
-libs            ("libsixDoFRigidBodyMotion.so" "libforces.so");
+// --- BIBLIOTECAS ---
+// Trocamos a libsixDoF pela libfvMotionSolvers (Movimento Sólido)
+libs            ("libfvMotionSolvers.so" "libforces.so");
 
 functions
 {
+    // Monitoramento de Forças (Essencial para os gráficos de Torque)
     monitoramento
     {
         type            forceCoeffs;
         libs            ("libforces.so");
         
+        // Ajuste o nome dos patches das suas pás aqui
         patches         (helice); 
 
         rho             rhoInf;
-        rhoInf          1.225;
+        rhoInf          1.104; // Densidade calculada no documento
 
-        // Dados geométricos
+        // Dados geométricos (ajuste conforme seu CAD)
         CofR            (0 0 0);
         liftDir         (0 1 0);  
         dragDir         (1 0 0);  
         pitchAxis       (0 0 1);
-        magUInf         10;
-        lRef            1;        
-        Aref            1;        
+        magUInf         6.0;      // Velocidade do vento
+        lRef            0.436;    // Diâmetro   
+        Aref            0.149;    // Area = pi*r^2 (Aprox)
 
         writeControl    timeStep;
         writeInterval   1;

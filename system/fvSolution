@@ -1,78 +1,91 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  v2012                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
+    version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
-    // --- SOLVER DE MALHA (Essencial para 6DoF) ---
-    cellDisplacement
+    // --- ESTE FOI O BLOCO QUE FALTOU ---
+    // Necessário para corrigir o fluxo na interface AMI
+    "(pcorr|pcorrFinal)"
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-06;
-        relTol          0;
+        solver           PBiCGStab;
+        preconditioner   DIC;
+        tolerance        1e-05;
+        relTol           0;
     }
 
-    // --- PRESSÃO (A mudança chave: PCG é "blindado") ---
-    "p|pFinal|pcorr.*"
+    // Pressão normal
+    "(p|pFinal)"
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-6;
-        relTol          0.01;
+        solver           PBiCGStab;
+        preconditioner   DIC;
+        tolerance        1e-06;
+        relTol           0.01;
     }
 
-    // --- VELOCIDADE E TURBULÊNCIA ---
-    "(U|k|epsilon|omega).*"
+    "(p|pFinal)Final"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
+        $p;
+        relTol           0;
+    }
+
+    // Velocidade e Turbulência
+    "(U|k|epsilon|omega)"
+    {
+        solver           smoothSolver;
+        smoother         symGaussSeidel;
+        tolerance        1e-06;
+        relTol           0.1;
+    }
+
+    "(U|k|epsilon|omega)Final"
+    {
+        $U;
+        relTol           0;
     }
 }
 
-// --- CONTROLE PIMPLE (Só uma vez!) ---
 PIMPLE
 {
-    correctPhi          yes;
+    momentumPredictor   yes;
     
-    // Configuracao robusta:
-    nOuterCorrectors    5;  // Mantém 5 para garantir que convirja a cada passo
-    nCorrectors         2;
-    nNonOrthogonalCorrectors 1;
+    // Configurações de estabilidade do documento (Caso 1)
+    nOuterCorrectors    2; 
+    nCorrectors         3; 
+    nNonOrthogonalCorrectors 4; 
     
-    moveMeshOuterCorrectors yes; // Recalcula o movimento várias vezes (vital!)
-}
-
-// --- RELAXAMENTO (Freio de mão) ---
-relaxationFactors
-{
-    fields
+    // Relaxamento agressivo para garantir que não exploda
+    relaxationFactors
     {
-        p               0.3;
+        fields
+        {
+            p               0.3;
+            pFinal          1.0;
+        }
+        equations
+        {
+            U               0.3; 
+            k               0.3;
+            epsilon         0.3;
+            omega           0.3;
+            "U.*Final"      1.0; 
+            "k.*Final"      1.0;
+            "epsilon.*Final" 1.0;
+        }
     }
-    equations
-    {
-        ".*"            0.3; // Segura tudo, inclusive k e epsilon
-    }
-}
-
-// --- Otimização de memória ---
-cache
-{
-    grad(U);
 }
 
 // ************************************************************************* //
