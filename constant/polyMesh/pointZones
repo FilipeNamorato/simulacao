@@ -1,36 +1,31 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
     version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      forces;
+    format      binary;
+    arch        "LSB;label=32;scalar=64";
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      pointZones;
+    meta
+    {
+        names           1 ( frozenPoints );
+    }
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// REMOVI O "forces {" AQUI
+1
+(frozenPoints
+{
+    type            pointZone;
+    pointLabels     List<label> 0;
+}
+)
 
-type            forces;
-libs            ("libforces.so");
-
-patches         (helice);
-
-// Configuração para incompressível (usando valor de referência)
-rho             rhoInf;
-rhoInf          1.104;
-
-CofR            (0 0 0);
-
-writeControl    timeStep;
-writeInterval   1;
-log             yes;
-
-// REMOVI O "}" DO FINAL
+// ************************************************************************* //

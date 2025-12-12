@@ -65,7 +65,7 @@ functions
         CofR            (0 0 0);
         liftDir         (0 1 0);  
         dragDir         (1 0 0);  
-        pitchAxis       (0 0 1);
+        pitchAxis       (0 1 0);
         magUInf         6.0;      // Velocidade do vento
         lRef            0.436;    // Diâmetro   
         Aref            0.149;    // Area = pi*r^2 (Aprox)

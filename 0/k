@@ -8,16 +8,15 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
+    class       volScalarField;
     location    "0";
-    object      U;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-// AJUSTE 1: Inicializa o campo já com a velocidade do vento (ajuda na convergência)
-internalField   uniform (0 3.3 0); 
+internalField   uniform 0.070;
 
 boundaryField
 {
@@ -27,26 +26,20 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        // AJUSTE 2: Velocidade reduzida para 3.3 m/s (Eixo Y) para atingir TSR ~7
-        value           uniform (0 3.3 0); 
+        value           $internalField;
     }
 
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     wall
     {
-        type            noSlip;
-    }
-
-    helice
-    {
-        type            movingWallVelocity;
-        value           uniform (0 0 0);
+        type            kqRWallFunction;
+        value           $internalField;
     }
 
     AMI1
@@ -58,6 +51,8 @@ boundaryField
     {
         type            cyclicAMI;
     }
+
 }
+
 
 // ************************************************************************* //

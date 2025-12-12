@@ -31,6 +31,6 @@ solidBodyCoeffs
     {
         origin      (0 0 0);
         axis        (0 1 0);
-        omega       25.52;      // Rad/s (baseado na tabela do seu PDF para 4 pás)
+        omega 106.0;
     }
 }

@@ -1,36 +1,39 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2412                                 |
+|  \\    /   O peration     | Version:  2412                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
     version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      forces;
+    format      binary;
+    arch        "LSB;label=32;scalar=64";
+    class       faceSet;
+    location    "constant/polyMesh/sets";
+    object      skewFaces;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// REMOVI O "forces {" AQUI
 
-type            forces;
-libs            ("libforces.so");
+14
+(
+442468
+442783
+443054
+443451
+443783
+443924
+444518
+444546
+444972
+445193
+445386
+446475
+447503
+447639
+)
 
-patches         (helice);
 
-// Configuração para incompressível (usando valor de referência)
-rho             rhoInf;
-rhoInf          1.104;
-
-CofR            (0 0 0);
-
-writeControl    timeStep;
-writeInterval   1;
-log             yes;
-
-// REMOVI O "}" DO FINAL
+// ************************************************************************* //
