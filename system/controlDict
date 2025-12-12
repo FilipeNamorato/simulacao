@@ -26,7 +26,7 @@ endTime         12;        // Tempo total citado no documento
 deltaT          0.00001;
 
 writeControl    adjustableRunTime;
-writeInterval   0.1;       // Salvando a cada 0.1s para não encher o disco
+writeInterval   0.02;       // Salvando a cada 0.1s para não encher o disco
 purgeWrite      0;
 writeFormat     binary;
 writePrecision  6;
@@ -62,7 +62,7 @@ functions
         rhoInf          1.104; // Densidade calculada no documento
 
         // Dados geométricos (ajuste conforme seu CAD)
-        CofR            (0 0 0);
+        CofR        (0.04 0.015 0);
         liftDir         (0 1 0);  
         dragDir         (1 0 0);  
         pitchAxis       (0 1 0);
@@ -74,6 +74,23 @@ functions
         writeInterval   1;
         log             yes;
     }
+    forcesHelice
+    {
+        type            forces;
+        libs            ("libforces.so");
+
+        patches         (helice);
+
+        rho             rhoInf;
+        rhoInf          1.225;
+
+        CofR            (0 0 0);   // ajuste se o centro de rotação não for a origem
+        log             false;
+
+        writeControl    runTime;
+        writeInterval   0.01;      // ajuste conforme o peso da escrita
+    }
+
 }
 
 // ************************************************************************* //
