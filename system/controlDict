@@ -17,7 +17,7 @@ FoamFile
 
 application     pimpleFoam;
 
-startFrom       startTime; // Começando do zero para garantir a rampa correta
+startFrom       latestTime; // Começando do zero para garantir a rampa correta
 startTime       0;
 stopAt          endTime;
 endTime         12;        // Tempo total citado no documento
@@ -49,48 +49,44 @@ libs            ("libfvMotionSolvers.so" "libforces.so");
 
 functions
 {
-    // Monitoramento de Forças (Essencial para os gráficos de Torque)
-    monitoramento
-    {
-        type            forceCoeffs;
-        libs            ("libforces.so");
-        
-        // Ajuste o nome dos patches das suas pás aqui
-        patches         (helice); 
+  monitoramento
+  {
+    type            forceCoeffs;
+    libs            ("libforces.so");
+    patches         (helice);
 
-        rho             rhoInf;
-        rhoInf          1.104; // Densidade calculada no documento
+    rho             rhoInf;
+    rhoInf          1.104;
 
-        // Dados geométricos (ajuste conforme seu CAD)
-        CofR        (0.04 0.015 0);
-        liftDir         (0 1 0);  
-        dragDir         (1 0 0);  
-        pitchAxis       (0 1 0);
-        magUInf         6.0;      // Velocidade do vento
-        lRef            0.436;    // Diâmetro   
-        Aref            0.149;    // Area = pi*r^2 (Aprox)
+    CofR            (0 0 0);      // idealmente o mesmo origin da rotatingMotion
+    dragDir         (1 0 0);      // direção do vento
+    liftDir         (0 0 1);      // perpendicular a drag e ao eixo
+    pitchAxis       (0 1 0);      // eixo de rotação
 
-        writeControl    timeStep;
-        writeInterval   1;
-        log             yes;
-    }
-    forcesHelice
-    {
-        type            forces;
-        libs            ("libforces.so");
+    magUInf         6.0;
+    lRef            0.436;
+    Aref            0.149;
 
-        patches         (helice);
+    writeControl    runTime;
+    writeInterval   0.01;         // 100 amostras por segundo, bom p gráfico
+    log             no;
+  }
 
-        rho             rhoInf;
-        rhoInf          1.225;
+  forcesHelice
+  {
+    type            forces;
+    libs            ("libforces.so");
+    patches         (helice);
 
-        CofR            (0 0 0);   // ajuste se o centro de rotação não for a origem
-        log             false;
+    rho             rhoInf;
+    rhoInf          1.104;
+    CofR            (0 0 0);
 
-        writeControl    runTime;
-        writeInterval   0.01;      // ajuste conforme o peso da escrita
-    }
-
+    writeControl    runTime;
+    writeInterval   0.01;
+    log             no;
+  }
 }
+
 
 // ************************************************************************* //

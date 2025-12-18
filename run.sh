@@ -28,14 +28,27 @@ fi
 echo "Decompondo para $NP processos"
 decomposePar -copyZero -force > log.decompose 2>&1
 
-echo "Rodando $SOLVER em paralelo"
-$MPI_EXEC $MPI_FLAGS -np "$NP" $SOLVER -parallel 2>&1 \
+
+echo "Rodando $SOLVER em paralelo..."
+$MPI_EXEC $MPI_FLAGS -np "$NP" "$SOLVER" -parallel 2>&1 \
   | stdbuf -oL -eL awk -v s="$LOG_INTERVAL_SEC" '
       BEGIN { t = systime() }
-      /FOAM FATAL|Floating point|SIGFPE|Segmentation fault|error|Error/ { print; fflush(); next }
-      /^(Time =|Courant Number|ExecutionTime)/ {
+
+      # Só o que é realmente crítico passa sempre
+      /FOAM FATAL ERROR|FOAM FATAL|SIGFPE|Floating point exception|Segmentation fault/ {
+        print
+        fflush()
+        next
+      }
+
+      # Linhas úteis (amostradas por tempo de relógio)
+      /^(Time =|Courant Number|ExecutionTime|forces|forceCoeffs|time step continuity errors)/ {
         now = systime()
-        if (now - t >= s) { print; fflush(); t = now }
+        if (now - t >= s) {
+          print
+          fflush()
+          t = now
+        }
       }
     ' > "$LOG_KEY"
 
